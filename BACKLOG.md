@@ -2,6 +2,12 @@
 
 Dated one-liners for everything deferred or spotted and not done.
 
+- **2026-10-05 · context budget · open** — the always-loaded playbook set is ~70k
+  characters on macOS, nearly half of Claude Code's 150k instruction limit, and
+  0.1.23 pushed `AUTHORITY.md` back to 20k. Propose a size-budget test (~40k),
+  an entries-only `LOCAL.md` template, and a re-measure of ADR 0011. Task 4 of
+  `docs/plans/2026-10-05-instruction-budget-plan.md`; needs its own go.
+  Source: otel-mtls budget warning, 2026-10-05.
 - **2026-09-27 · plan · open** — the behaviour-suite plan
   (`docs/plans/2026-09-26-behaviour-suite-plan.md`, still untracked) reserves
   ADRs 0014–0018; ADR 0014 went to hygiene and ADR 0015 to dev modes, so its numbers become 0016–0020

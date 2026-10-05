@@ -2,6 +2,7 @@
 
 | Plan | Status | Written | Last updated |
 |---|---|---|---|
+| [Instruction budget — otel-mtls under the 150k limit](docs/plans/2026-10-05-instruction-budget-plan.md) | **parked 2026-10-05** — owner agreed; runs when the host is idle (start gate in the plan) | 2026-10-05 | 2026-10-05 |
 | [The local layer](docs/plans/2026-09-21-local-layer-plan.md) | **source published** — `checkpoint/0.1.16` verified; private installation acceptance separate | 2026-09-21 | 2026-09-23 |
 | Hygiene — section 13 (ADR 0014) | **done 2026-09-27** — owner asked 2026-09-27 | 2026-09-27 | 2026-09-27 |
 | Refused means stop; worktrees through git (0.1.20) | **done 2026-09-27** — owner asked 2026-09-27 | 2026-09-27 | 2026-09-27 |
