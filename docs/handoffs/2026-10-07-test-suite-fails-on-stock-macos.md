@@ -45,3 +45,9 @@ the fork stays a mirror. Fix: `make_tmpdir` returns the physical path
 **Left running:** nothing. All background test runs were stopped or finished;
 no subagents. Scratch output (not evidence for the repo) is in this session's
 scratchpad under `tests/`.
+
+## Budget pause — 2026-10-07
+
+Paused on the owner's word (relayed by mtls-49). Everything above is still exact: no
+work was in progress, nothing half-done, nothing running. Open decision unchanged:
+fix the temp-folder test defect upstream (recommended) or on the fork.
