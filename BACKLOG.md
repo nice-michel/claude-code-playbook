@@ -2,6 +2,10 @@
 
 Dated one-liners for everything deferred or spotted and not done.
 
+- **2026-10-07 · test defect · open** — `install_preflight_test` fails 14/291 on stock
+  macOS: `make_tmpdir` returns a `/var/...` path (a symlink) and the destination guard
+  refuses linked ancestors. Fix: return `pwd -P`. Second failing suite of `tests/run.sh`
+  unconfirmed. Source: `docs/handoffs/2026-10-07-test-suite-fails-on-stock-macos.md`.
 - **2026-10-05 · context budget · open** — the always-loaded playbook set is ~70k
   characters on macOS, nearly half of Claude Code's 150k instruction limit, and
   0.1.23 pushed `AUTHORITY.md` back to 20k. Propose a size-budget test (~40k),
