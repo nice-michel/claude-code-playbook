@@ -4,6 +4,55 @@ All notable changes to this rulebook. Newest first. Dates are absolute.
 
 ---
 
+## 0.1.28 — 2026-10-10
+
+- **Roster:** a new mechanical review seat. Qualified: the Standard tier and
+  **Claude Haiku 5.5**, on the owner's word after one first comparison (all
+  ten seeded defects found twice; on a real file, the known subtle defect
+  twice plus eight or nine further real defects per run). Not qualified:
+  earlier Haiku models, and GPT-6 Luna until it passes the nine-defect
+  comparison. A review run on Haiku 5.5 says so in its header.
+- **Rules 3.1 and 8.1, section 0:** mechanical review never runs on an
+  *unqualified* Fast model (was: never the Fast tier). README and site follow.
+- ADR 0022. Tests: 344 wording assertions (7 new), 189 mutations (5 new).
+
+---
+
+## 0.1.27 — 2026-10-09
+
+Reviews were slowing development even though development never waited for a
+verdict: a mechanical review ran after every task, and "risk overrides cadence"
+sent nearly every concurrency, data or API task to its own deep review.
+
+- **Rule 3.1:** each task is gated by its automated checks (tests, lint, type
+  checks). The mechanical review moves to the batch and runs side by side with
+  the deep review on the same pinned range.
+- **Rules 3.1–3.2:** a batch is 5–15 tasks or about 2,000 changed lines,
+  whichever comes first — a starting value the close-out numbers move. Deep
+  review at task grain only for the security floor and unsafe code;
+  concurrency, public-API and data-path tasks go early in the batch and are
+  named in its brief.
+- **Rule 14.2:** the dev-mode table follows; sensitive keeps 3–6 tasks or about
+  1,000 lines. Section 0, the front page, the README and the site follow.
+- ADR 0021. Tests: 337 wording assertions (13 new), 184 mutations (11 new).
+
+---
+
+## 0.1.26 — 2026-10-09
+
+A Codex session kept a 3.3 GB idle compiler cache for days because an earlier
+refusal had been written into its notes as "refused deletion, must keep", and
+it then retried the identical refused `rm -rf` instead of the build tool's
+clean command.
+
+- **Rule 13.6:** a refusal is not a classification. It stops that command; it
+  does not make the item protected. Proven build output stays removable by rule
+  10.1's route, and a refusal recorded in a note or handoff never turns it into
+  something to keep. Section 0's summary follows.
+- Tests: 324 wording assertions, 173 mutations (2 new).
+
+---
+
 ## 0.1.25 — 2026-10-05
 
 A Codex session stopped a release at 31.97 GB free, under its 32.43 GB floor,

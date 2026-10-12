@@ -1,5 +1,11 @@
 # Progress & current standing
 
+**0.1.28, 2026-10-10 — Claude Haiku 5.5 qualified for mechanical review** (roster). ADR 0022.
+
+**0.1.27, 2026-10-09 — reviews batch more:** automated checks per task, mechanical and deep review side by side per batch of 5–15 tasks or about 2,000 lines. ADR 0021.
+
+**0.1.26, 2026-10-09 — a refusal is not a classification** (rule 13.6).
+
 **0.1.25, 2026-10-05 — cleanup never stalls on a spelling;** the disk floor triggers cleanup and never stops work by itself.
 
 **0.1.24, 2026-10-04 — commit and push is a standing request**, stated where every session sees it, answering the harness default that waits to be asked.

@@ -681,4 +681,33 @@ assert_eq "13.5 the floor never stops work by itself" 1 "$(count_in_file '**The 
 assert_eq "13.5 stops only for a step that will not fit" 1 "$(count_in_file 'Stop only for a step whose measured need will not fit in the space left' "$H")"
 assert_eq "13.6 allows only the build-output route" 1 "$(count_in_file 'except rule 10.1'"'"'s route for build output proven regenerable and idle, once' "$H")"
 
+assert_eq "13.6 a refusal is not a classification" 1 "$(count_in_file '**A refusal is not a classification:**' "$H")"
+assert_eq "13.6 a recorded refusal never makes build output a keep" 1 "$(count_in_file 'never turns it into something to keep' "$H")"
+
+
+# Reviews batch more: automated checks per task, mechanical and deep side by side per batch (0.1.27).
+assert_eq "3.1 the task row is gated by automated checks" 1 "$(count_in_file '| **task** | one unit of work, rules 6.1–6.2 | automated checks — tests, lint, type checks (rule 2.2) |' "$ROOT/rules/REVIEWS.md")"
+assert_eq "3.1 mechanical and deep run side by side per batch" 1 "$(count_in_file '| mechanical and deep, side by side on the same range |' "$ROOT/rules/REVIEWS.md")"
+assert_eq "3.1 mechanical review is per batch" 1 "$(count_in_file '**Per batch**, side by side with the deep review on the same pinned range' "$ROOT/rules/REVIEWS.md")"
+assert_eq "3.1 the automated checks gate each task" 1 "$(count_in_file '**Per task, the automated checks are the gate:**' "$ROOT/rules/REVIEWS.md")"
+assert_eq "3.1 a deep batch is 5 to 15 tasks or about 2,000 lines" 1 "$(count_in_file '**Per batch** of 5–15 tasks, or about 2,000 changed lines, whichever comes first' "$ROOT/rules/REVIEWS.md")"
+assert_eq "3.2 a batch closes at about 2,000 changed lines" 1 "$(count_in_file '(b) the diff passes about 2,000 changed lines — a starting value, not a measurement' "$ROOT/rules/REVIEWS.md")"
+assert_eq "3.2 only floor and unsafe-code tasks get task-grain deep review" 1 "$(count_in_file 'or unsafe code gets the deep review at task grain, always' "$ROOT/rules/REVIEWS.md")"
+assert_eq "3.2 concurrency, API and data tasks stay in the batch" 1 "$(count_in_file '**Concurrency, public-API and other data-path tasks stay in the batch:**' "$ROOT/rules/REVIEWS.md")"
+assert_eq "14.2 production batches mechanical and deep" 1 "$(count_in_file '| **production** | automated checks | mechanical and deep, 5–15 tasks or about 2,000 lines |' "$ROOT/rules/DEV_MODES.md")"
+assert_eq "14.2 sensitive keeps smaller batches" 1 "$(count_in_file '| **sensitive** | automated checks; deep for every task that touches the floor | mechanical and deep, 3–6 tasks or about 1,000 lines |' "$ROOT/rules/DEV_MODES.md")"
+assert_eq "section 0 summarises the batched mechanical review" 1 "$(count_in_file '**Automated checks per task; mechanical and deep review side by side per batch;' "$ROOT/rules/AUTHORITY.md")"
+assert_eq "retired: deep review per task for concurrency, data and API" 0 "$(count_in_file 'concurrency, data-safety, unsafe-code and public-API tasks get the deep review at task grain' "$ROOT/rules/REVIEWS.md")"
+assert_eq "retired: mechanical review per task in section 0" 0 "$(count_in_file '**Mechanical review per task, deep per batch' "$ROOT/rules/AUTHORITY.md")"
+
+
+# Claude Haiku 5.5 is qualified for the mechanical review seat (0.1.28).
+assert_eq "roster names the mechanical review seat" 1 "$(count_in_file '## The mechanical review seat (rule 3.1)' "$ROOT/rules/ROSTER.md")"
+assert_eq "roster qualifies Claude Haiku 5.5 for mechanical review" 1 "$(count_in_file '| **Mechanical review** | the **Standard** tier (**Claude Sonnet**), and **Claude Haiku 5.5** |' "$ROOT/rules/ROSTER.md")"
+assert_eq "roster keeps earlier Haiku models unqualified" 1 "$(count_in_file '| any earlier Claude Haiku;' "$ROOT/rules/ROSTER.md")"
+assert_eq "roster says Haiku 5.5 rests on one first comparison" 1 "$(count_in_file '**Claude Haiku 5.5 is qualified on the owner'"'"'s word, 2026-10-10, after one first comparison.**' "$ROOT/rules/ROSTER.md")"
+assert_eq "3.1 mechanical review never on an unqualified Fast model" 1 "$(count_in_file 'never an unqualified Fast model (measured' "$ROOT/rules/REVIEWS.md")"
+assert_eq "8.1 mechanical review never on an unqualified Fast model" 1 "$(count_in_file 'never an unqualified Fast model, measured, see' "$ROOT/rules/SUBAGENTS.md")"
+assert_eq "retired: mechanical review never on the Fast one" 0 "$(count_in_file 'on the Standard tier and never the Fast one' "$ROOT/rules/REVIEWS.md")"
+
 finish

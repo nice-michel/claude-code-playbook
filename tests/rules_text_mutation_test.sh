@@ -651,4 +651,58 @@ check_mutation "rule 6.1 never waits to be asked is caught" \
 check_mutation "rule 6.1 reports a failed commit or push is caught" \
     'replace_in_file "$M/rules/WORKFLOW.md" "is reported with the error, never left silent" "MUTATED"'
 
+check_mutation "13.6 losing refusal-is-not-a-classification is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "**A refusal is not a classification:**" "**A refusal marks it protected:**"'
+
+check_mutation "13.6 letting a recorded refusal make a keep is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "never turns it into something to keep" "makes it something to keep"'
+
+check_mutation "3.1 losing the automated-checks task row is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "| automated checks — tests, lint, type checks (rule 2.2) |" "| mechanical |"'
+
+check_mutation "3.1 losing side-by-side batch review is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "| mechanical and deep, side by side on the same range |" "| deep |"'
+
+check_mutation "3.1 mechanical review back to per task is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "**Per batch**, side by side with the deep review on the same pinned range" "**Per task**"'
+
+check_mutation "3.1 losing the automated-check gate is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "**Per task, the automated checks are the gate:**" "MUTATED"'
+
+check_mutation "3.1 deep batch back to 3-10 is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "**Per batch** of 5–15 tasks, or about 2,000 changed lines, whichever comes first" "**Per batch** of 3–10 tasks"'
+
+check_mutation "3.2 losing the 2,000-line figure is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "(b) the diff passes about 2,000 changed lines — a starting value, not a measurement" "(b) the diff has outgrown what one reviewer can hold"'
+
+check_mutation "3.2 widening task-grain deep review is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "or unsafe code gets the deep review at task grain, always" "and concurrency, data-safety, unsafe-code and public-API tasks get the deep review at task grain, always"'
+
+check_mutation "3.2 losing batch placement for concurrency tasks is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "**Concurrency, public-API and other data-path tasks stay in the batch:**" "MUTATED"'
+
+check_mutation "14.2 production back to deep-only batches is caught" \
+    'replace_in_file "$M/rules/DEV_MODES.md" "| **production** | automated checks | mechanical and deep, 5–15 tasks or about 2,000 lines |" "| **production** | mechanical | deep, 3–10 tasks |"'
+
+check_mutation "14.2 sensitive losing small batches is caught" \
+    'replace_in_file "$M/rules/DEV_MODES.md" "mechanical and deep, 3–6 tasks or about 1,000 lines" "mechanical and deep, 5–15 tasks"'
+
+check_mutation "section 0 back to mechanical per task is caught" \
+    'replace_in_file "$M/rules/AUTHORITY.md" "**Automated checks per task; mechanical and deep review side by side per batch;" "**Mechanical review per task, deep per batch,"'
+
+check_mutation "roster losing Haiku 5.5 is caught" \
+    'replace_in_file "$M/rules/ROSTER.md" "(**Claude Sonnet**), and **Claude Haiku 5.5** |" "(**Claude Sonnet**) |"'
+
+check_mutation "roster admitting every Haiku is caught" \
+    'replace_in_file "$M/rules/ROSTER.md" "| any earlier Claude Haiku;" "| nothing;"'
+
+check_mutation "roster dropping the first-comparison caveat is caught" \
+    'replace_in_file "$M/rules/ROSTER.md" "after one first comparison.**" "and is fully measured.**"'
+
+check_mutation "3.1 letting any Fast model review is caught" \
+    'replace_in_file "$M/rules/REVIEWS.md" "never an unqualified Fast model (measured" "or the Fast tier (measured"'
+
+check_mutation "8.1 letting any Fast model review is caught" \
+    'replace_in_file "$M/rules/SUBAGENTS.md" "never an unqualified Fast model, measured, see" "or the Fast tier, see"'
+
 finish

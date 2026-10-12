@@ -86,8 +86,8 @@ When the ask is genuinely mixed ("review this and fix what you find"), it's an i
 
 | # | The law in one line |
 |---|---|
-| 3.1 | **Mechanical review per task, deep per batch, high deep at each milestone and release** — on the Standard (never Fast), Strong and Top tiers respectively; the high deep review is dual-blind and a **gate**. Small plans collapse levels; the tier never drops — except in **economy mode**, on my word only, which seats the Top-tier review seats on the roster's economy configuration and is recorded in every review it runs. |
-| 3.2 | **A batch closes** when the next task would build on unreviewed work it can't cheaply undo, the diff outgrows one reviewer, or the planner's cap is hit. **Risk overrides cadence:** security, concurrency, data, unsafe code and public API get deep review per task, always. |
+| 3.1 | **Automated checks per task; mechanical and deep review side by side per batch; high deep at each milestone and release** — the reviews on the Standard tier or a model the roster qualifies for mechanical review (never an unqualified Fast one), the Strong and the Top tiers respectively; the high deep review is dual-blind and a **gate**. Small plans collapse levels; the tier never drops — except in **economy mode**, on my word only, which seats the Top-tier review seats on the roster's economy configuration and is recorded in every review it runs. |
+| 3.2 | **A batch closes** when the next task would build on unreviewed work it can't cheaply undo, the diff outgrows one reviewer, or the planner's cap is hit. A batch is 5–15 tasks or about 2,000 changed lines. **Risk overrides cadence:** a task on the security floor or in unsafe code gets deep review per task, always; concurrency, data and public-API tasks go early in the batch and are named in its brief. |
 | 3.1+ | **The project's dev mode sets how much of this ladder runs** — section 14; read `DEV_MODES.md` by path before any reviewer dispatch. |
 | 3.3 | **A review's input is a commit, never a working tree.** Pipelined, never fire-and-forget: every finding pins a commit, a blocker **stops the line**, an exited reviewer is not an accepted review, and in-process subagents and forks do not count as blind. |
 | 3.4 | **The release gate gets the best review, regardless of task count** — no `v*` tag before it. |
@@ -129,7 +129,7 @@ When the ask is genuinely mixed ("review this and fix what you find"), it's an i
 | 13.3 | **Worktrees go through git after three checks** — ignored files, commits reachable from a branch or tag, not in use; then `git worktree remove` without `--force`. |
 | 13.4 | **Make things cleanable when you create them** — known places, and a `.hygiene.json` marker on anything large or long-lived elsewhere. |
 | 13.5 | **Run it at close-out, before heavy disk use, and below the disk floor; end with a report** — removed, kept, and the next candidates for me with what each would cost. The floor never stops work by itself; only a step that measurably will not fit does. |
-| 13.6 | **A refusal ends the attempt** — reclassify, then quarantine or list it for me; never re-issue the same effect (rule 10.1), except build output proven regenerable and idle whose command form was refused: its toolchain clean command, once. |
+| 13.6 | **A refusal ends the attempt** — reclassify, then quarantine or list it for me; never re-issue the same effect (rule 10.1), except build output proven regenerable and idle whose command form was refused: its toolchain clean command, once. A refusal is not a classification. |
 
 ### 14 · Dev modes — `rules/DEV_MODES.md`
 *Trigger: before writing a plan, before any reviewer dispatch, when a review returns a security finding, and when I change a project's mode. Read it by path; it does not load every session.*

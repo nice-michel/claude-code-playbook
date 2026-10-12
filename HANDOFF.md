@@ -1,10 +1,15 @@
 # Handoff
 
-**Current seam tape:** [`docs/handoffs/2026-10-07-test-suite-fails-on-stock-macos.md`](docs/handoffs/2026-10-07-test-suite-fails-on-stock-macos.md).
-Where we are in three lines: fork synced to 0.1.25; `install_preflight_test` fails 14/291 on a stock Mac
-because test temp dirs land under the `/var` symlink (root cause confirmed, fix not yet made — owner picks upstream or fork).
-Next: make that fix; then the parked instruction-budget plan when the host is idle.
-Previous tape: `docs/handoffs/2026-10-05-upstream-sync-and-instruction-budget.md`.
+**Current seam tape (this fork):** [`docs/handoffs/2026-10-07-test-suite-fails-on-stock-macos.md`](docs/handoffs/2026-10-07-test-suite-fails-on-stock-macos.md).
+Fork status: merged upstream 0.1.28 on 2026-10-12. `install_preflight_test` failed 14/291 on a stock Mac at 0.1.25
+because test temp dirs land under the `/var` symlink (root cause confirmed; fix not yet made, owner picks upstream or fork).
+The instruction-budget plan stays parked until the host is idle. Previous fork tape: `docs/handoffs/2026-10-05-upstream-sync-and-instruction-budget.md`.
+
+**Upstream seam tape:** [`docs/handoffs/2026-09-29-hygiene-back-to-back-and-installs.md`](docs/handoffs/2026-09-29-hygiene-back-to-back-and-installs.md).
+Upstream where-we-are: `checkpoint/0.1.28` qualifies Haiku 5.5 for mechanical review (ADR 0022); `checkpoint/0.1.27` batches the mechanical review (ADR 0021); `checkpoint/0.1.26` says a refusal is not a classification; `checkpoint/0.1.25` unblocks build-output cleanup and stops the disk floor halting work; 0.1.24 made commit-and-push a standing request; 0.1.23 added dev modes (section 14,
+ADR 0015) and the first shipped skill, `/dev-mode`. The Codex edition gets the
+same in 0.1.9. Next: pick the behaviour-suite plan's size (small recommended;
+its ADRs are now 0016–0020); decide the published disk-floor default.
 ---
 
 **Owner installation, 2026-09-28:** 0.1.22 installed (backup `~/.claude/rules.backup-2026-09-28-171612/`), byte-identical to `checkpoint/0.1.22`, local layer 6/6. The Codex edition 0.1.7 ports hygiene and back-to-back tasks and is installed too, with the owner's first Codex local layer.
