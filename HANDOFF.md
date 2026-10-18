@@ -1,12 +1,12 @@
 # Handoff
 
 **Current seam tape (this fork):** [`docs/handoffs/2026-10-07-test-suite-fails-on-stock-macos.md`](docs/handoffs/2026-10-07-test-suite-fails-on-stock-macos.md).
-Fork status: merged upstream 0.1.28 on 2026-10-12. `install_preflight_test` failed 14/291 on a stock Mac at 0.1.25
+Fork status: merged upstream 0.1.31 on 2026-10-18. `install_preflight_test` failed 14/291 on a stock Mac at 0.1.25
 because test temp dirs land under the `/var` symlink (root cause confirmed; fix not yet made, owner picks upstream or fork).
 The instruction-budget plan stays parked until the host is idle. Previous fork tape: `docs/handoffs/2026-10-05-upstream-sync-and-instruction-budget.md`.
 
 **Upstream seam tape:** [`docs/handoffs/2026-09-29-hygiene-back-to-back-and-installs.md`](docs/handoffs/2026-09-29-hygiene-back-to-back-and-installs.md).
-Upstream where-we-are: `checkpoint/0.1.28` qualifies Haiku 5.5 for mechanical review (ADR 0022); `checkpoint/0.1.27` batches the mechanical review (ADR 0021); `checkpoint/0.1.26` says a refusal is not a classification; `checkpoint/0.1.25` unblocks build-output cleanup and stops the disk floor halting work; 0.1.24 made commit-and-push a standing request; 0.1.23 added dev modes (section 14,
+Upstream where-we-are: `checkpoint/0.1.31` adds the WSL `/mnt/wsl` tmpfs row and the log-masking clause in rule 9.5; `checkpoint/0.1.30` rewords rule 9.7 so a green host starts at once; `checkpoint/0.1.29` keeps build output out of RAM and makes heavy work wait for a quiet host (rule 9.7, ADR 0023); `checkpoint/0.1.28` qualifies Haiku 5.5 for mechanical review (ADR 0022); `checkpoint/0.1.27` batches the mechanical review (ADR 0021); `checkpoint/0.1.26` says a refusal is not a classification; `checkpoint/0.1.25` unblocks build-output cleanup and stops the disk floor halting work; 0.1.24 made commit-and-push a standing request; 0.1.23 added dev modes (section 14,
 ADR 0015) and the first shipped skill, `/dev-mode`. The Codex edition gets the
 same in 0.1.9. Next: pick the behaviour-suite plan's size (small recommended;
 its ADRs are now 0016–0020); decide the published disk-floor default.

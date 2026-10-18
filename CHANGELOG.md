@@ -4,6 +4,86 @@ All notable changes to this rulebook. Newest first. Dates are absolute.
 
 ---
 
+## 0.1.31 — 2026-10-18
+
+Two lessons from one evening on the owner's machine.
+
+- **On WSL, `/mnt/wsl` is a `tmpfs` too.** A Codex lane had left a 45 GB
+  cargo target there two days earlier; the swap sat full for a day, builds
+  stalled the box to a load near 170 on 28 cores, and the AI service on the
+  same host looked guilty on the process monitor because it was the largest
+  process left, retrying against a stalled database. The processes' own
+  `VmSwap` added up to under 2 GB: the swapped pages were the folder's.
+  Removing it took swap from 32.7 to 9.4 GB and available memory from 24 to
+  46 GB. Rule 13.4 already forbade build output on any memory-backed
+  filesystem; the Linux platform file gains a row that tells tmpfs pages
+  from process swap and names `/mnt/wsl`.
+- **Rule 9.5: reading a log is a secret surface.** A scan for a crash masked
+  `key=` assignments and runs of 40 characters; a 35-character bot token
+  inside a `/bot<id>:<token>/` URL path passed the mask and reached a
+  transcript. Before a log line is printed: strip colour codes, mask every
+  URL to its host and every run of 30 or more token-like characters; prefer
+  counts and timestamps to message bodies.
+- The local-layer guide's example Override is re-anchored to section 9's
+  new digest (the change to rule 9.5 rewrote the section, so any Override
+  bound to section 9 goes stale, as designed, and is re-anchored at install).
+
+---
+
+## 0.1.30 — 2026-10-16
+
+Within the hour of installing 0.1.29, a Codex lane classified `cargo xtask
+gate` as heavy work — correctly — and then declined to run it on a host at
+load 2.5 on 28 cores. Asked how it checks load, it gave the right commands
+and the right reading; it had decided from the 134 it had read before the
+owner's pause, still sitting in its conversation. The heading, "heavy work
+waits for a quiet host", was a second trap in the same rule.
+
+- **Rule 9.7** now opens with the outcome: "heavy work measures the host
+  first, and a green host starts at once." A green host is never a reason to
+  wait, the rule never asks anyone's permission, and waiting is only for
+  orange and red — a wait, not a stop.
+- **The number that decides is the one you read now** (the owner: "just take
+  the current state"): run the command at the moment of the decision, before
+  each heavy step and again on resuming after a pause, and read the 1-minute
+  average; a figure already in the conversation is a record of an earlier
+  machine, and the 5- and 15-minute averages are history after a spike.
+  Periodic watching is a daemon's job, not a session's.
+- Rule 8.1's clause, the section table, the site and the guide's example
+  Override follow. Tests: three new wording assertions, two new mutations.
+
+---
+
+## 0.1.29 — 2026-10-16
+
+A lane building a Rust project had set its cargo target to `/dev/shm` — the
+only filesystem with room on a disk at 96 % — and left 44 GB resident in RAM
+for 26 hours after it ended. The next day four Rust builds started at once on
+the same machine with 2.8 GB available and swap full; the load reached 145 on
+28 cores, and none of the four had measured the host.
+
+- **Rule 13.4:** build output and large scratch never live on a memory-backed
+  filesystem (`/dev/shm`, any tmpfs, a RAM disk). Check a target path's
+  filesystem type first; no room on disk never makes memory the next disk.
+- **Rule 13.1:** a build target a lane created for itself outside the repo's
+  own output folder is the lane's to remove at its close-out.
+- **Rule 13.5:** hygiene also runs below a memory floor (the local layer's
+  value, 10 % of the machine's memory otherwise) and when a memory-backed
+  filesystem is more than a quarter full; memory-backed items go first.
+- **Rule 9.7, new, always loaded:** heavy work — a build, a full test suite, a
+  fan-out — waits for a quiet host. Load is a factor of the core count: green
+  below 0.9 starts; orange, 0.9 to 1.8, starts nothing new and heavy; red, 1.8
+  and above or memory below the floor, pauses a running lane before its next
+  heavy step too. Rule 8.1 points at it. Section 9's header reads 9.1–9.7.
+- **Platform files:** every one says how to tell a memory-backed path; Linux
+  adds the tmpfs measurement and the `shared`-column tell; Windows says how to
+  read the bands on a counter that has no load average.
+- README, site and the section table follow; the local-layer guide's example
+  Override is re-anchored to the new section 9 digest. ADR 0023. Tests: 363
+  wording assertions (19 new), 197 mutations (8 new).
+
+---
+
 ## 0.1.28 — 2026-10-10
 
 - **Roster:** a new mechanical review seat. Qualified: the Standard tier and

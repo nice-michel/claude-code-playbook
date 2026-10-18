@@ -242,6 +242,36 @@ check_mutation "rule 10.1 allowing a re-spelled effect is caught" \
 check_mutation "worktree removal allowing --force is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "Then run \`git worktree remove <path>\`, without \`--force\`, alone" "Then run \`git worktree remove --force <path>\`"'
 
+check_mutation "build output allowed on a memory-backed filesystem is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "**Build output and large scratch never live on a memory-backed filesystem**" "Build output may live wherever there is room"'
+
+check_mutation "a full disk making memory the next disk is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "never that memory is the next disk" "so use memory when the disk is full"'
+
+check_mutation "a lane leaving its private build target is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "a lane removes its own build target at its close-out and never leaves it for a later sweep" "a later sweep handles build targets"'
+
+check_mutation "the memory floor dropping from 13.5 is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "or a memory-backed filesystem holds more than a quarter of its size" "or when convenient"'
+
+check_mutation "rule 9.7 starting heavy work on a heavy host is caught" \
+    'replace_in_file "$M/rules/ENVIRONMENT.md" "**Waiting is only for orange and red, and it is a wait, not a stop:**" "**Waiting is for every band:**"'
+
+check_mutation "rule 9.7 deciding from a remembered number is caught" \
+    'replace_in_file "$M/rules/ENVIRONMENT.md" "**The number that decides is the one you read now:**" "**The last number you saw decides:**"'
+
+check_mutation "rule 9.7 making a green host wait is caught" \
+    'replace_in_file "$M/rules/ENVIRONMENT.md" "a green host is never a reason to wait, and this rule never asks anyone'"'"'s permission" "wait for the owner'"'"'s word"'
+
+check_mutation "rule 9.7 losing the red band is caught" \
+    'replace_in_file "$M/rules/ENVIRONMENT.md" "**Red, 1.8 and above, or available memory below rule 13.5'"'"'s floor:**" "**Red, 4.0 and above:**"'
+
+check_mutation "rule 9.7 losing the running lane's re-measure is caught" \
+    'replace_in_file "$M/rules/ENVIRONMENT.md" "measures again before each heavy step and pauses when the host has gone heavy under it" "need not measure again"'
+
+check_mutation "a platform file losing the memory-backed row is caught" \
+    'drop_line "$M/rules/platform/LINUX.md" "| Is a path memory-backed? |"'
+
 check_mutation "worktree folder deletion stops being destructive is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "skips git'"'"'s checks and is a destructive act under rule 10.1" "is also fine"'
 
