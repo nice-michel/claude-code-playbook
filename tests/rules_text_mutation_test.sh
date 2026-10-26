@@ -284,11 +284,20 @@ check_mutation "the close-out worktree line of 13.7 dropping is caught" \
 check_mutation "a paused or uncommitted worktree becoming removable is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "Nobody removes a worktree that is paused, not ready, or holds uncommitted work." "A paused worktree may be removed."'
 
-check_mutation "a dead lane's work becoming sweepable is caught" \
-    'replace_in_file "$M/rules/HYGIENE.md" "nobody commits, stashes or discards a dead lane'"'"'s work on its behalf" "the coordinator may discard it"'
+check_mutation "adoption no longer preserving the dead lane's work is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "and pushed — never stashed, reset or deleted" "or discarded if it looks unimportant"'
+
+check_mutation "not merging becoming deleting is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "Not merging is never deleting: an unmerged branch stays on the remote." "An unmerged branch may be deleted."'
 
 check_mutation "the merge validation by ancestry dropping is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "\`git merge-base --is-ancestor <worktree HEAD> <target>\`" "the branch looks merged"'
+
+check_mutation "empty no longer requiring a clean status is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "shows nothing but regenerable build output; no stash entry was made from it; and no process works in it" "looks tidy"'
+
+check_mutation "the consent for deleting unpreserved code dropping is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "Deleting anything that is in neither git nor the quarantine — code above all — needs my consent" "Deleting it is fine"'
 
 check_mutation "a marker file inside a worktree becoming allowed is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "A worktree'"'"'s marker is its lock reason (rule 13.7), never a file inside it" "A worktree may carry a marker file"'

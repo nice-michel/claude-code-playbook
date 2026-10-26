@@ -420,26 +420,38 @@ assert_eq "13.2: build output follows rule 10.2's carve-out" \
     1 "$(count_in_file 'rule 10.2'"'"'s build-output carve-out lets it go without an owner' "$H")"
 assert_eq "13.6: never re-issue the same effect" \
     1 "$(count_in_file 'do not re-issue the same effect in another form' "$H")"
-# Rule 13.7, every worktree claimed, declared, and removed once merged (0.1.32, ADR 0024).
-H137=$(paragraph_with '13.7 **Every worktree is claimed, declared, and removed once its work is merged.**' "$H")
-assert_eq "13.7: the creator claims a worktree with a lock reason carrying its state" \
-    1 "$(count_in_file '`git worktree lock --reason "<owner> · <task> · <YYYY-MM-DD> · <state>"`' "$H")"
+# Rule 13.7, every worktree claimed, declared, and removed once empty (0.1.32, ADR 0024).
+H137=$(paragraph_with '13.7 **Every worktree is claimed, declared, and removed once it holds nothing git cannot give back.**' "$H")
+assert_eq "13.7: the creator claims a worktree with a key=value lock reason" \
+    1 "$(count_in_file '`git worktree lock --reason "owner=<lane>; task=<task>; created=<YYYY-MM-DD>; state=running"`' "$H")"
 assert_eq "13.7: a finished lane declares ready to merge, and does not remove yet" \
     1 "$(count_in_file '2. **When the task is done, the lane declares it; it does not remove it yet.**' "$H")"
 assert_eq "13.7: a coordinator refuses a close-out without the worktree line" \
     1 "$(count_in_file 'a coordinator does not accept a close-out without that line' "$H")"
-assert_eq "13.7: removal waits for a validated merge" \
-    1 "$(count_in_file '3. **A merged worktree is removed after validation, by whoever merged it.**' "$H")"
+assert_eq "13.7: an empty worktree may be removed" \
+    1 "$(count_in_file '3. **An empty worktree may be removed by the coordinator at any time.**' "$H")"
+assert_eq "13.7: empty requires only build output in the status" \
+    1 "$(count_in_file 'shows nothing but regenerable build output; no stash entry was made from it; and no process works in it' "$H")"
 assert_eq "13.7: the merge validation is by ancestry" \
     1 "$(count_in_file '`git merge-base --is-ancestor <worktree HEAD> <target>`' "$H")"
 assert_eq "13.7: a merged worktree is never left behind" \
-    1 "$(count_in_file 'a merged worktree is never left behind' "$H")"
+    1 "$(count_in_file '**a merged worktree is never left behind**' "$H")"
 assert_eq "13.7: paused, not-ready or uncommitted worktrees stay" \
     1 "$(count_in_file 'Nobody removes a worktree that is paused, not ready, or holds uncommitted work.' "$H")"
-assert_eq "13.7: a dead lane's worktree is adopted, not swept" \
-    1 "$(count_in_file '5. **A worktree whose lane died is adopted, not swept.**' "$H")"
-assert_eq "13.7: nobody commits or discards a dead lane's work for it" \
-    1 "$(count_in_file 'nobody commits, stashes or discards a dead lane'"'"'s work on its behalf' "$H")"
+assert_eq "13.7: a paused worktree's build output goes after the grace period" \
+    1 "$(count_in_file 'or 7 days from `since=` — removes its build output' "$H")"
+assert_eq "13.7: a stale paused worktree is archived, preserving first" \
+    1 "$(count_in_file 'it commits and pushes any uncommitted work to `rescue/<branch>-<YYYY-MM-DD>`, quarantines (rule 10.3)' "$H")"
+assert_eq "13.7: deleting what is in neither git nor quarantine needs consent" \
+    1 "$(count_in_file 'Deleting anything that is in neither git nor the quarantine — code above all — needs my consent' "$H")"
+assert_eq "13.7: a dead lane's worktree is adopted and handled by the coordinator" \
+    1 "$(count_in_file '5. **A worktree whose lane died is adopted and handled by the coordinator, not swept and not parked for me.**' "$H")"
+assert_eq "13.7: adoption preserves first, never discards" \
+    1 "$(count_in_file 'and pushed — never stashed, reset or deleted' "$H")"
+assert_eq "13.7: not merging is never deleting" \
+    1 "$(count_in_file 'Not merging is never deleting: an unmerged branch stays on the remote.' "$H")"
+assert_eq "13.7: the owner hears only of the hard cases" \
+    1 "$(count_in_file 'It comes to me only for a conflict it cannot resolve, provenance or ownership it cannot establish, or a decision outside the plan.' "$H")"
 assert_eq "13.7: the inventory has five groups" \
     1 "$(count_in_file 'in five groups: **running**' "$H")"
 assert_eq "13.7: another lane's live lock still stops removal" \
@@ -453,7 +465,7 @@ assert_eq "section 13 is read before creating a worktree" \
 assert_eq "section 0's trigger names creating a worktree" \
     1 "$(count_in_file 'and before you create a worktree or pause a lane. Read it by path' "$A")"
 assert_eq "section 0 summarises rule 13.7" \
-    1 "$(count_in_file '| 13.7 | **Every worktree is claimed, declared, and removed once its work is merged**' "$A")"
+    1 "$(count_in_file '| 13.7 | **Every worktree is claimed, declared, and removed once it holds nothing git cannot give back**' "$A")"
 assert_eq "rule 10.2's cleanup trigger names creating a worktree" \
     1 "$(count_in_file 'or a disk warning — and before creating a worktree or pausing a lane. It does not load every session.' "$ROOT/rules/DESTRUCTIVE.md")"
 assert_eq "the close-out's hygiene checkpoint names the worktree line" \
