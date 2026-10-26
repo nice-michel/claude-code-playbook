@@ -4,7 +4,42 @@ All notable changes to this rulebook. Newest first. Dates are absolute.
 
 ---
 
-## 0.1.31 — 2026-10-18
+## 0.1.32 — 2026-10-26
+
+On 2026-10-25 the owner's largest project held 100 git worktrees: 22 finished
+lanes already merged into their integration branch, 33 detached review
+snapshots in `/tmp`, and a dozen lanes paused for weeks, each with its build
+cache. The disk was below its floor. Section 13 already said the creating lane
+removes its worktree at close-out, but the sentence sat inside the removal
+procedure, the section never loaded when a worktree was *created*, and nothing
+made a close-out account for one (ADR 0024).
+
+- **New rule 13.7, every worktree is claimed, declared, and removed once its
+  work is merged.** The creator claims it with `git worktree lock --reason
+  "<owner> · <task> · <date> · <state>"` and re-locks it when the state
+  changes. A finished lane commits, pushes, runs its checks and declares to the
+  coordinator *ready to merge* (branch, head, evidence) or *not ready* and why;
+  its close-out lists every worktree it made and its state. Whoever merges the
+  work removes the worktree after validating that all of it is merged (HEAD an
+  ancestor of the target, nothing but build output in the status, no stash,
+  nothing running in it). A paused, not-ready or uncommitted worktree stays,
+  labelled with why. A worktree whose lane died is adopted by the coordinator,
+  never swept: uncommitted work is listed for the owner, merged and clean goes.
+- **The inventory.** Every hygiene report lists all worktrees with their lock
+  reasons: running, ready to merge, paused or not ready, merged, unclaimed or
+  orphaned — the standing answer to "which worktrees are stale, and why keep
+  them".
+- **A worktree's marker is its lock reason, never a file inside it** (rule
+  13.4): an untracked `.hygiene.json` in a worktree makes `git worktree remove`
+  refuse.
+- **Section 13's trigger** now names creating a worktree and pausing a lane, in
+  the file's header, section 0's summary, rule 10.2 and the section table; the
+  header says its `paths:` scope cannot fire for a sibling worktree or a `/tmp`
+  snapshot. Rule 6.1's hygiene checkpoint names the worktree line.
+- Any local-layer Override bound to section 13 goes stale, as designed, and is
+  re-anchored at install.
+
+ — 2026-10-18
 
 Two lessons from one evening on the owner's machine.
 

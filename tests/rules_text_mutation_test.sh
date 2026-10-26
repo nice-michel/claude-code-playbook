@@ -278,6 +278,24 @@ check_mutation "worktree folder deletion stops being destructive is caught" \
 check_mutation "the worktree lock duty dropping is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "it locks it with \`git worktree lock\` while it is in use" "it may lock it"'
 
+check_mutation "the close-out worktree line of 13.7 dropping is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "a coordinator does not accept a close-out without that line" "a coordinator may accept it"'
+
+check_mutation "a paused or uncommitted worktree becoming removable is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "Nobody removes a worktree that is paused, not ready, or holds uncommitted work." "A paused worktree may be removed."'
+
+check_mutation "a dead lane's work becoming sweepable is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "nobody commits, stashes or discards a dead lane'"'"'s work on its behalf" "the coordinator may discard it"'
+
+check_mutation "the merge validation by ancestry dropping is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "\`git merge-base --is-ancestor <worktree HEAD> <target>\`" "the branch looks merged"'
+
+check_mutation "a marker file inside a worktree becoming allowed is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "A worktree'"'"'s marker is its lock reason (rule 13.7), never a file inside it" "A worktree may carry a marker file"'
+
+check_mutation "the worktree inventory dropping from 13.5 is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "Every pass ends with a report: the worktree inventory (rule 13.7);" "Every pass ends with a report:"'
+
 check_mutation "branch -D becoming allowed is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "Never use \`git branch -D\` on a branch with unique work" "Use \`git branch -D\` when convenient"'
 
