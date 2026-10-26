@@ -299,6 +299,9 @@ check_mutation "empty no longer requiring a clean status is caught" \
 check_mutation "the consent for deleting unpreserved code dropping is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "Deleting anything that is in neither git nor the quarantine — code above all — needs my consent" "Deleting it is fine"'
 
+check_mutation "worktrees moving back to a temporary directory is caught" \
+    'replace_in_file "$M/rules/HYGIENE.md" "Never a temporary directory, which the system may empty on its own" "A temporary directory is fine"'
+
 check_mutation "a marker file inside a worktree becoming allowed is caught" \
     'replace_in_file "$M/rules/HYGIENE.md" "A worktree'"'"'s marker is its lock reason (rule 13.7), never a file inside it" "A worktree may carry a marker file"'
 
