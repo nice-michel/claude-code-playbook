@@ -336,7 +336,7 @@ assert_eq "deleting a worktree folder with rm is a destructive act" \
 assert_eq "the creating lane owns worktrees, a reviewer's detached one included" \
     1 "$(count_in_text 'including a detached one made for a reviewer' "$WT2")"
 assert_eq "the owning lane locks its worktree" \
-    1 "$(count_in_text 'it locks it with `git worktree lock` while it is in use, and unlocks and removes it at close-out' "$WT2")"
+    1 "$(count_in_text 'it locks it with `git worktree lock` while it is in use, and its worktree is removed once its work is merged' "$WT2")"
 assert_eq "branch -d is described as no proof on its own" \
     1 "$(count_in_text 'deletes a pushed branch that the default branch never merged' "$WT2")"
 assert_eq "branch deletion needs another ref holding its commits" \
@@ -420,6 +420,45 @@ assert_eq "13.2: build output follows rule 10.2's carve-out" \
     1 "$(count_in_file 'rule 10.2'"'"'s build-output carve-out lets it go without an owner' "$H")"
 assert_eq "13.6: never re-issue the same effect" \
     1 "$(count_in_file 'do not re-issue the same effect in another form' "$H")"
+# Rule 13.7, every worktree claimed, declared, and removed once merged (0.1.32, ADR 0024).
+H137=$(paragraph_with '13.7 **Every worktree is claimed, declared, and removed once its work is merged.**' "$H")
+assert_eq "13.7: the creator claims a worktree with a lock reason carrying its state" \
+    1 "$(count_in_file '`git worktree lock --reason "<owner> · <task> · <YYYY-MM-DD> · <state>"`' "$H")"
+assert_eq "13.7: a finished lane declares ready to merge, and does not remove yet" \
+    1 "$(count_in_file '2. **When the task is done, the lane declares it; it does not remove it yet.**' "$H")"
+assert_eq "13.7: a coordinator refuses a close-out without the worktree line" \
+    1 "$(count_in_file 'a coordinator does not accept a close-out without that line' "$H")"
+assert_eq "13.7: removal waits for a validated merge" \
+    1 "$(count_in_file '3. **A merged worktree is removed after validation, by whoever merged it.**' "$H")"
+assert_eq "13.7: the merge validation is by ancestry" \
+    1 "$(count_in_file '`git merge-base --is-ancestor <worktree HEAD> <target>`' "$H")"
+assert_eq "13.7: a merged worktree is never left behind" \
+    1 "$(count_in_file 'a merged worktree is never left behind' "$H")"
+assert_eq "13.7: paused, not-ready or uncommitted worktrees stay" \
+    1 "$(count_in_file 'Nobody removes a worktree that is paused, not ready, or holds uncommitted work.' "$H")"
+assert_eq "13.7: a dead lane's worktree is adopted, not swept" \
+    1 "$(count_in_file '5. **A worktree whose lane died is adopted, not swept.**' "$H")"
+assert_eq "13.7: nobody commits or discards a dead lane's work for it" \
+    1 "$(count_in_file 'nobody commits, stashes or discards a dead lane'"'"'s work on its behalf' "$H")"
+assert_eq "13.7: the inventory has five groups" \
+    1 "$(count_in_file 'in five groups: **running**' "$H")"
+assert_eq "13.7: another lane's live lock still stops removal" \
+    1 "$(count_in_file 'Another lane'"'"'s live lock still stops you (rule 13.3): you list it, you do not remove it.' "$H")"
+assert_eq "13.4: a worktree's marker is its lock reason, never a file inside it" \
+    1 "$(count_in_file 'A worktree'"'"'s marker is its lock reason (rule 13.7), never a file inside it' "$H")"
+assert_eq "13.5: the report carries the worktree inventory" \
+    1 "$(count_in_file 'Every pass ends with a report: the worktree inventory (rule 13.7);' "$H")"
+assert_eq "section 13 is read before creating a worktree" \
+    1 "$(count_in_file 'and before you create a worktree, pause a lane, or answer which worktrees are stale' "$H")"
+assert_eq "section 0's trigger names creating a worktree" \
+    1 "$(count_in_file 'and before you create a worktree or pause a lane. Read it by path' "$A")"
+assert_eq "section 0 summarises rule 13.7" \
+    1 "$(count_in_file '| 13.7 | **Every worktree is claimed, declared, and removed once its work is merged**' "$A")"
+assert_eq "rule 10.2's cleanup trigger names creating a worktree" \
+    1 "$(count_in_file 'or a disk warning — and before creating a worktree or pausing a lane. It does not load every session.' "$ROOT/rules/DESTRUCTIVE.md")"
+assert_eq "the close-out's hygiene checkpoint names the worktree line" \
+    1 "$(count_in_file 'with every worktree the task created and its declared state, *ready to merge* or why not (rule 13.7)' "$ROOT/rules/WORKFLOW.md")"
+assert_contains "rule 13.7 paragraph is found" "$H137" 'cheap to make again'
 H135=$(paragraph_with '13.5 **When hygiene runs, and what it reports.**' "$H")
 assert_eq "13.5: the disk floor is the local layer's, else 10 % free" \
     1 "$(count_in_text 'the one your local layer sets, or 10 % free when it sets none' "$H135")"
