@@ -422,14 +422,20 @@ assert_eq "13.6: never re-issue the same effect" \
     1 "$(count_in_file 'do not re-issue the same effect in another form' "$H")"
 # Rule 13.7, every worktree claimed, declared, and removed once empty (0.1.32, ADR 0024).
 H137=$(paragraph_with '13.7 **Every worktree is claimed, declared, and removed once it holds nothing git cannot give back.**' "$H")
+assert_eq "13.7: every worktree lives in <repo>_lanes, beside the repository" \
+    1 "$(count_in_file '1. **Every worktree lives in one home: `<repo>_lanes/<name>`, beside the repository and never inside it.**' "$H")"
+assert_eq "13.7: never a temporary directory" \
+    1 "$(count_in_file 'Never a temporary directory, which the system may empty on its own' "$H")"
+assert_eq "13.7: a stray worktree is moved through git, never re-created by deleting" \
+    1 "$(count_in_file 'is moved there with `git worktree move <old> <new>` once nothing runs in it, never re-created by deleting it' "$H")"
 assert_eq "13.7: the creator claims a worktree with a key=value lock reason" \
     1 "$(count_in_file '`git worktree lock --reason "owner=<lane>; task=<task>; created=<YYYY-MM-DD>; state=running"`' "$H")"
 assert_eq "13.7: a finished lane declares ready to merge, and does not remove yet" \
-    1 "$(count_in_file '2. **When the task is done, the lane declares it; it does not remove it yet.**' "$H")"
+    1 "$(count_in_file '3. **When the task is done, the lane declares it; it does not remove it yet.**' "$H")"
 assert_eq "13.7: a coordinator refuses a close-out without the worktree line" \
     1 "$(count_in_file 'a coordinator does not accept a close-out without that line' "$H")"
 assert_eq "13.7: an empty worktree may be removed" \
-    1 "$(count_in_file '3. **An empty worktree may be removed by the coordinator at any time.**' "$H")"
+    1 "$(count_in_file '4. **An empty worktree may be removed by the coordinator at any time.**' "$H")"
 assert_eq "13.7: empty requires only build output in the status" \
     1 "$(count_in_file 'shows nothing but regenerable build output; no stash entry was made from it; and no process works in it' "$H")"
 assert_eq "13.7: the merge validation is by ancestry" \
@@ -445,7 +451,7 @@ assert_eq "13.7: a stale paused worktree is archived, preserving first" \
 assert_eq "13.7: deleting what is in neither git nor quarantine needs consent" \
     1 "$(count_in_file 'Deleting anything that is in neither git nor the quarantine — code above all — needs my consent' "$H")"
 assert_eq "13.7: a dead lane's worktree is adopted and handled by the coordinator" \
-    1 "$(count_in_file '5. **A worktree whose lane died is adopted and handled by the coordinator, not swept and not parked for me.**' "$H")"
+    1 "$(count_in_file '6. **A worktree whose lane died is adopted and handled by the coordinator, not swept and not parked for me.**' "$H")"
 assert_eq "13.7: adoption preserves first, never discards" \
     1 "$(count_in_file 'and pushed — never stashed, reset or deleted' "$H")"
 assert_eq "13.7: not merging is never deleting" \
@@ -453,7 +459,9 @@ assert_eq "13.7: not merging is never deleting" \
 assert_eq "13.7: the owner hears only of the hard cases" \
     1 "$(count_in_file 'It comes to me only for a conflict it cannot resolve, provenance or ownership it cannot establish, or a decision outside the plan.' "$H")"
 assert_eq "13.7: the inventory has five groups" \
-    1 "$(count_in_file 'in five groups: **running**' "$H")"
+    1 "$(count_in_file 'at every pass: **running**; **ready to merge**; **paused or not ready**' "$H")"
+assert_eq "13.7: the inventory script and its status page are named" \
+    1 "$(count_in_file 'the playbook'"'"'s `scripts/worktree-inventory.sh` does the mechanical part read-only, and with `--write` keeps the list as the status page `<repo>_lanes/README.md`' "$H")"
 assert_eq "13.7: another lane's live lock still stops removal" \
     1 "$(count_in_file 'Another lane'"'"'s live lock still stops you (rule 13.3): you list it, you do not remove it.' "$H")"
 assert_eq "13.4: a worktree's marker is its lock reason, never a file inside it" \

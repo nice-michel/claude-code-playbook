@@ -21,6 +21,18 @@ made a close-out account for one (ADR 0024).
   the state changes. A finished lane commits, pushes, runs its checks and
   declares to the coordinator *ready to merge* (branch, head, evidence) or *not
   ready* and why; its close-out lists every worktree it made and its state.
+- **One home for worktrees: `<repo>_lanes/<name>`**, beside the repository,
+  never inside it and never in a temporary directory (which the system may
+  empty, taking review evidence with it); review snapshots too, as
+  `review-<task>-<short sha>`. A stray one is moved with `git worktree move`.
+- **`scripts/worktree-inventory.sh`, the inventory done mechanically.**
+  Read-only toward every worktree: it reads the key=value lock reasons, checks
+  pushed, merged, modified, untracked, ignored and stash, flags a pause past
+  its `until=` date and any worktree outside `<repo>_lanes/`, and prints the
+  five groups. `--write` keeps them as the status page `<repo>_lanes/README.md`.
+  A coordinator runs it when its session starts and at every hygiene pass.
+  New suite `tests/worktree_inventory_test.sh` (22 assertions on fixture
+  repositories; two mutations of the script turned it red).
 - **Empty means removable.** A worktree is empty when its HEAD is on a pushed
   branch, its status shows only build output, no stash came from it and
   nothing runs in it. The coordinator may remove an empty worktree at any time,

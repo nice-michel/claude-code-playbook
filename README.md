@@ -56,7 +56,7 @@ it agrees with it.
 
 **[Open the visual map →](https://michelabboud.github.io/claude-code-playbook/)**
 
-An explorable page covering all fifteen sections and sixty-four rules: click a
+An explorable page covering all fifteen sections and sixty-five rules: click a
 section to see its trigger and its rules, plus the tables that carry the real
 structure — the approval table, the review ladder, the model roster, the close-out
 chain, and the three-way platform matrix.
