@@ -1,6 +1,6 @@
-# 0024 — Every worktree is claimed, declared, and removed once its work is merged
+# 0024 — Every worktree is claimed, declared, and removed once it holds nothing git cannot give back
 
-- **Status:** accepted, 2026-10-26 (the owner: "please update and fix the hygiene rules in the playbook", after "keeping 100 worktrees, that's a bad hygiene maintenance that I fight against non stop"; then, on the first draft: "what if that lane dies and I have left-overs", "when task is done, commit and push and check if possible and declare if you are ready for merge to the orchestrator", "we should not remove a worktree that is paused ... or uncommitted or not ready", "merged branch should continue with worktree removal after validations ... and that it's really all merged").
+- **Status:** accepted, 2026-10-26 (the owner: "please update and fix the hygiene rules in the playbook", after "keeping 100 worktrees, that's a bad hygiene maintenance that I fight against non stop"; then, on the first draft: "what if that lane dies and I have left-overs", "when task is done, commit and push and check if possible and declare if you are ready for merge to the orchestrator", "we should not remove a worktree that is paused ... or uncommitted or not ready", "merged branch should continue with worktree removal after validations ... and that it's really all merged"; and on adoption: "the orchestrator can take authority, check the dead lanes, inspect them and act by itself ... do that only if there are conflict that can't be resolved or things that are unclear, or major decisions to take"; on the pause schedule: "a grace time of X days before we remove the cache", "after X time, clear cache, quarantine and compress them, archive ... deletion will require my consent specially if there is code inside"; and "worktree with no essence, special code, or data, it's considered empty to me and can be removed").
 - **Scope:** new rule 13.7; the header and rules 13.3, 13.4 and 13.5 (`rules/HYGIENE.md`); the section 13 trigger and summary (`rules/AUTHORITY.md`); the cleanup trigger in rule 10.2 (`rules/DESTRUCTIVE.md`); the hygiene checkpoint in rule 6.1 (`rules/WORKFLOW.md`); the section table in `CLAUDE.md`.
 
 ## Context
@@ -37,28 +37,35 @@ procedure. It failed for four reasons:
 
 ## Decision
 
-New rule 13.7, **every worktree is claimed, declared, and removed once its work
-is merged**:
+New rule 13.7, **every worktree is claimed, declared, and removed once it holds
+nothing git cannot give back**:
 
-1. The creator claims it at creation with `git worktree lock --reason`, naming
-   the owner, task, date and state, and re-locks it when the state changes.
-   The lock reason is the worktree's marker.
+1. The creator claims it at creation with `git worktree lock --reason`, as
+   `key=value` pairs (owner, task, created, state; a pause adds since, until,
+   why), and re-locks it when the state changes. The lock reason is the
+   worktree's marker, and a script can read it.
 2. When the task is done, the lane commits, pushes, runs its checks and
    declares to the coordinator *ready to merge* (branch, head, evidence) or
-   *not ready* and why. It does not remove the worktree: the work is not merged
-   yet, and a fix round may need it.
-3. Whoever merges it removes it, after validating that all of it is merged:
-   its HEAD is an ancestor of the target line, the status shows only build
-   output, no stash came from it, nothing runs in it, and rule 13.3's checks
-   pass. A merged worktree is never left behind.
-4. A paused, not-ready or uncommitted worktree stays, re-locked with its state
-   and reason, and the handoff carries the `git worktree add` line.
-5. A worktree whose lane died is adopted by the coordinator, never swept.
-   Uncommitted or unpushed work stays and is listed for the owner; nobody
-   commits or discards a dead lane's work on its behalf. Clean and merged goes
-   by step 3; clean and unmerged is listed as unfinished work.
-6. Every hygiene report lists all worktrees with their lock reasons: running,
-   ready to merge, paused or not ready, merged, unclaimed or orphaned.
+   *not ready* and why. It does not remove the worktree: a fix round may need
+   it.
+3. An **empty** worktree (HEAD on a pushed branch, only build output in the
+   status, no stash, nothing running) may be removed by the coordinator at any
+   time. A merged one is always removed, after an ancestry check against the
+   line it was made for.
+4. A paused or not-ready worktree stays while it holds work. The coordinator
+   reports it every pass, removes its build output after a grace period (7
+   days by default), and after a stale period (its `until=` date, or 30 days)
+   archives it: work pushed to a `rescue/` branch, other non-build files
+   quarantined compressed with a manifest. Then it is empty and goes. Deleting
+   anything in neither git nor quarantine needs the owner's consent.
+5. A worktree whose lane died is adopted by the coordinator, which takes the
+   lane's authority: it commits and pushes any uncommitted work first, then
+   removes, declares, pauses or finishes it as the lane would. Not merging is
+   never deleting. The owner hears only of a conflict it cannot resolve,
+   unclear provenance, or a decision outside the plan.
+6. Every hygiene report lists all worktrees with their lock reasons and
+   build-output size: running, ready to merge, paused or not ready, merged or
+   empty, unclaimed or orphaned.
 
 Section 13's trigger now also names creating a worktree and pausing a lane, in
 the file's header, in section 0's summary, in rule 10.2 and in the section
@@ -84,19 +91,30 @@ the project folder.
   draft of this rule). The work is not merged yet, a fix round may need the
   same worktree, and the lane cannot prove its work landed. The owner moved
   removal to the merge.
-- **Removing a paused lane's worktree** (also the first draft). A pause is the
-  owner's decision to resume later, often for reasons outside the work, such
-  as a budget; the worktree may hold state the lane has not committed, and
-  removing it turns a pause into a teardown. A paused worktree stays,
-  labelled with why.
+- **Removing a paused lane's worktree at once** (also the first draft). A
+  pause is the owner's decision to resume later, often for reasons outside the
+  work, such as a budget, and the worktree may hold state the lane has not
+  committed. It stays while it holds work; only its cost shrinks on a schedule,
+  and nothing leaves it without being preserved first.
+- **Keeping a paused worktree's build cache indefinitely.** On 2026-10-25 the
+  caches, not the worktrees, were most of the lost disk (one paused lane's
+  cache was 14 GB). A grace period keeps a quick resume cheap; after it, the
+  toolchain rebuilds the cache.
 - **Sweeping a dead lane's leftovers by age.** Age says nothing about whether
-  the work is safe. Adoption and classification do: merged and clean goes,
-  anything else comes to the owner.
+  the work is safe.
+- **Listing every dead lane's worktree for the owner** (the second draft). The
+  checks are mechanical and the decision is the lane's, so routing it to the
+  owner only adds waiting. Preserving first (commit and push, never discard)
+  is what makes it safe for the coordinator to act alone.
 
 ## Consequences
 
 - A lane's close-out gains a declaration and one line; a merge gains a
-  validation and a removal; a pause gains a re-lock and a handoff line.
+  validation and a removal; a pause gains a re-lock and a handoff line, and
+  later a cold build if the lane resumes after its grace period.
+- The grace and stale periods are defaults the local layer may set.
+- A `rescue/` branch is a push to the remote; it carries work the lane had not
+  committed, and it is never deleted by this rule.
 - A worktree with no lock is unclaimed by definition, so worktrees made before
   this rule show up as "unclaimed" in the first inventory and come to the owner
   once, with what removing each would lose.

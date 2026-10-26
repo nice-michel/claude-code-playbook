@@ -14,20 +14,33 @@ removes its worktree at close-out, but the sentence sat inside the removal
 procedure, the section never loaded when a worktree was *created*, and nothing
 made a close-out account for one (ADR 0024).
 
-- **New rule 13.7, every worktree is claimed, declared, and removed once its
-  work is merged.** The creator claims it with `git worktree lock --reason
-  "<owner> · <task> · <date> · <state>"` and re-locks it when the state
-  changes. A finished lane commits, pushes, runs its checks and declares to the
-  coordinator *ready to merge* (branch, head, evidence) or *not ready* and why;
-  its close-out lists every worktree it made and its state. Whoever merges the
-  work removes the worktree after validating that all of it is merged (HEAD an
-  ancestor of the target, nothing but build output in the status, no stash,
-  nothing running in it). A paused, not-ready or uncommitted worktree stays,
-  labelled with why. A worktree whose lane died is adopted by the coordinator,
-  never swept: uncommitted work is listed for the owner, merged and clean goes.
+- **New rule 13.7, every worktree is claimed, declared, and removed once it
+  holds nothing git cannot give back.** The creator claims it with `git
+  worktree lock --reason "owner=<lane>; task=<task>; created=<date>;
+  state=running"` (key=value, so a script can read it) and re-locks it when
+  the state changes. A finished lane commits, pushes, runs its checks and
+  declares to the coordinator *ready to merge* (branch, head, evidence) or *not
+  ready* and why; its close-out lists every worktree it made and its state.
+- **Empty means removable.** A worktree is empty when its HEAD is on a pushed
+  branch, its status shows only build output, no stash came from it and
+  nothing runs in it. The coordinator may remove an empty worktree at any time,
+  and a merged one is always removed, after an ancestry check against the line
+  it was made for.
+- **A paused worktree stays while it holds work, on a schedule.** It is
+  reported in every inventory; after 7 days (or the local layer's grace period)
+  its build output goes, unless the project marks it as evidence; after 30 days
+  or its `until=` date (or the local layer's stale period) it is archived: work
+  pushed to `rescue/<branch>-<date>`, other non-build files quarantined and
+  compressed, and the now-empty worktree removed. Deleting anything in neither
+  git nor quarantine needs the owner's consent.
+- **A dead lane's worktree is adopted by the coordinator, which acts for it:**
+  it commits and pushes any uncommitted work first (the lane's branch, or a
+  `rescue/` branch when unsure), then removes, declares, pauses or finishes it
+  as the lane would. The owner hears only of an unresolvable conflict, unclear
+  provenance or a decision outside the plan.
 - **The inventory.** Every hygiene report lists all worktrees with their lock
-  reasons: running, ready to merge, paused or not ready, merged, unclaimed or
-  orphaned — the standing answer to "which worktrees are stale, and why keep
+  reasons and build-output size: running, ready to merge, paused or not ready,
+  merged or empty, unclaimed or orphaned — the standing answer to "which worktrees are stale, and why keep
   them".
 - **A worktree's marker is its lock reason, never a file inside it** (rule
   13.4): an untracked `.hygiene.json` in a worktree makes `git worktree remove`
